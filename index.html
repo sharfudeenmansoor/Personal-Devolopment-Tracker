@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕷️ Personal Devolopment— Final Year Tracker</title>
+    <meta name="description"
+        content="Premium 4-tab Spider-Man themed dashboard: Data Analyst 280-Day Tracker, TANCET Aptitude Vault, Anti-Gravity Fitness Hub, and Spider-Sense BrainDump Notepad.">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM — Spider-Man Crimson Tech
+        ============================================================ */
+        :root {
+            --bg-void: #05070f;
+            --bg-card: rgba(10, 14, 28, 0.82);
+            --bg-card-solid: #080c1a;
+            --red: #e21b2c;
+            --red-dim: #7a0c16;
+            --blue: #0091ff;
+            --blue-dim: #003d6b;
+            --silver: #c4d4f0;
+            --white: #f0f4ff;
+            --text-1: #e8eeff;
+            --text-2: #6a7a9a;
+            --text-3: #2a3450;
+            --border-r: rgba(226, 27, 44, 0.22);
+            --border-b: rgba(0, 145, 255, 0.2);
+            --glow-r: 0 0 20px rgba(226, 27, 44, 0.45), 0 0 50px rgba(226, 27, 44, 0.12);
+            --glow-b: 0 0 20px rgba(0, 145, 255, 0.45), 0 0 50px rgba(0, 145, 255, 0.12);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-void);
+            color: var(--text-1);
+            font-family: 'Exo 2', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030408;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--red), var(--blue));
+            border-radius: 4px;
+        }
+
+        /* ---- Canvas Web ---- */
+        #web-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ---- Scanline ---- */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.05) 2px, rgba(0, 0, 0, 0.05) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ---- Main Wrapper ---- */
+        #app-root {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============================================================
+           CARDS
+        ============================================================ */
+        .sp-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border-r);
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .3s, box-shadow .3s, transform .25s;
+        }
+
+        .sp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--red), var(--blue), var(--red));
+            background-size: 200% 100%;
+            animation: shimmer 5s linear infinite;
+        }
+
+        .sp-card:hover {
+            border-color: var(--border-b);
+            box-shadow: 0 4px 30px rgba(0, 145, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0%
+            }
+
+            100% {
+                background-position: 200%
+            }
+        }
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+        .sp-header {
+            background: linear-gradient(135deg, rgba(12, 16, 32, 0.97) 0%, rgba(5, 7, 15, 0.99) 100%);
+            border: 1px solid var(--border-r);
+            border-radius: 20px;
+            box-shadow: var(--glow-r), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sp-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top left, rgba(226, 27, 44, 0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at bottom right, rgba(0, 145, 255, 0.07) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .title-gradient {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.1rem, 3.5vw, 1.9rem);
+            letter-spacing: .05em;
+            background: linear-gradient(90deg, #ff3347 0%, #ff7a86 30%, #c8d8f0 55%, #4db8ff 80%, #0091ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(226, 27, 44, 0.4));
+        }
+
+        /* ---- Day Nav ---- */
+        .day-pod {
+            background: rgba(3, 5, 12, 0.9);
+            border: 1px solid var(--border-b);
+            border-radius: 14px;
+            box-shadow: var(--glow-b);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(226, 27, 44, 0.18), rgba(226, 27, 44, 0.06));
+            border: 1px solid rgba(226, 27, 44, 0.4);
+            color: var(--silver);
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .84rem;
+            cursor: pointer;
+            letter-spacing: .06em;
+            transition: all .25s ease;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(226, 27, 44, 0.5), rgba(226, 27, 44, 0.25));
+            border-color: var(--red);
+            box-shadow: var(--glow-r);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        #global-day-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--blue);
+            color: var(--blue);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            width: 68px;
+            outline: none;
+            transition: border-color .3s, color .3s;
+        }
+
+        #global-day-input:focus {
+            border-bottom-color: var(--red);
+            color: #ff3347;
+        }
+
+        /* ============================================================
+           TAB NAVIGATION
+        ============================================================ */
+        .tab-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .72rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all .3s cubic-bezier(.25, 1, .5, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            right: 50%;
+            height: 2px;
+            background: var(--red);
+            transition: left .3s, right .3s;
+            border-radius: 99px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-1);
+            background: rgba(226, 27, 44, 0.08);
+            border-color: var(--border-r);
+        }
+
+        .tab-btn.tab-active {
+            background: linear-gradient(135deg, rgba(226, 27, 44, 0.25), rgba(226, 27, 44, 0.1));
+            color: #fff;
+            border-color: var(--red);
+            box-shadow: 0 0 18px rgba(226, 27, 44, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-btn.tab-active::after {
+            left: 8%;
+            right: 8%;
+        }
+
+        /* ============================================================
+           TAB CONTENT TRANSITIONS
+        ============================================================ */
+        .tab-page {
+            display: none;
+            opacity: 0;
+            transform: scale(.97) translateY(6px);
+            transition: opacity .35s ease, transform .35s ease;
+        }
+
+        .tab-page.active {
+            display: block;
+            animation: pageIn .4s cubic-bezier(.25, 1, .5, 1) forwards;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: scale(.97) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ============================================================
+           FORM CONTROLS
+        ============================================================ */
+        .sp-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 145, 255, 0.15);
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .9rem;
+            font-weight: 700;
+            color: var(--blue);
+            outline: none;
+            transition: all .3s;
+        }
+
+        .sp-input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 2px rgba(226, 27, 44, 0.15);
+            color: #ff3347;
+        }
+
+        .sp-input::placeholder {
+            color: rgba(106, 122, 154, 0.5);
+            font-family: 'Exo 2', sans-serif;
+            font-size: .75rem;
+            font-weight: 400;
+        }
+
+        .sp-textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 145, 255, 0.15);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .78rem;
+            color: var(--text-1);
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color .3s;
+        }
+
+        .sp-textarea:focus {
+            border-color: var(--red);
+        }
+
+        .sp-label {
+            font-size: .6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-2);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* ---- Buttons ---- */
+        .btn-red {
+            background: linear-gradient(135deg, var(--red), var(--red-dim));
+            border: 1px solid rgba(226, 27, 44, 0.5);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow-r);
+            transition: all .3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-red::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.07) 100%);
+        }
+
+        .btn-red:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 28px rgba(226, 27, 44, 0.65);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--blue), var(--blue-dim));
+            border: 1px solid rgba(0, 145, 255, 0.5);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow-b);
+            transition: all .3s;
+        }
+
+        .btn-blue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 28px rgba(0, 145, 255, 0.65);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--red) 0%, #7b1fa2 50%, var(--blue) 100%);
+            border: none;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all .3s;
+            box-shadow: 0 0 20px rgba(123, 31, 162, 0.4);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+        }
+
+        /* ============================================================
+           BADGES / LABELS
+        ============================================================ */
+        .badge {
+            display: inline-block;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .6rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        .badge-red {
+            background: rgba(226, 27, 44, 0.15);
+            color: #ff3347;
+            border: 1px solid rgba(226, 27, 44, 0.3);
+        }
+
+        .badge-blue {
+            background: rgba(0, 145, 255, 0.15);
+            color: #4db8ff;
+            border: 1px solid rgba(0, 145, 255, 0.3);
+        }
+
+        .badge-green {
+            background: rgba(0, 200, 120, 0.15);
+            color: #00e676;
+            border: 1px solid rgba(0, 200, 120, 0.3);
+        }
+
+        .badge-purple {
+            background: rgba(180, 0, 255, 0.15);
+            color: #d580ff;
+            border: 1px solid rgba(180, 0, 255, 0.3);
+        }
+
+        .badge-yellow {
+            background: rgba(255, 200, 0, 0.15);
+            color: #ffd600;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+
+        /* Section titles */
+        .sec-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-1);
+            letter-spacing: .04em;
+        }
+
+        .micro-label {
+            font-size: .6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--text-2);
+        }
+
+        /* ============================================================
+           PROGRESS BAR
+        ============================================================ */
+        .prog-track {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            height: 8px;
+            border-radius: 99px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 5px;
+        }
+
+        .prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--blue));
+            border-radius: 99px;
+            transition: width .6s cubic-bezier(.4, 0, .2, 1);
+            box-shadow: 0 0 8px rgba(226, 27, 44, 0.5);
+            position: relative;
+        }
+
+        .prog-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #fff;
+            border-radius: 99px;
+            box-shadow: 0 0 6px #fff;
+        }
+
+        /* ============================================================
+           CHECKLIST TIMELINE ITEMS
+        ============================================================ */
+        .tl-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 145, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .tl-item:hover {
+            border-color: rgba(226, 27, 44, 0.3);
+            background: rgba(226, 27, 44, 0.04);
+            transform: translateX(2px);
+        }
+
+        .tl-item.done {
+            opacity: .35;
+            border-color: rgba(0, 145, 255, 0.04);
+            background: transparent;
+        }
+
+        .tl-item.done .tl-task {
+            text-decoration: line-through;
+            color: var(--text-3);
+        }
+
+        .tl-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .7rem;
+            color: var(--blue);
+            white-space: nowrap;
+        }
+
+        .tl-task {
+            font-size: .78rem;
+            color: var(--text-1);
+            margin-top: 3px;
+            line-height: 1.5;
+        }
+
+        .tl-cb {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            accent-color: var(--red);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ============================================================
+           STICKY NOTES
+        ============================================================ */
+        .sticky-note {
+            background: linear-gradient(135deg, #12183a 0%, #1e0a10 100%);
+            border: 1px solid var(--border-r);
+            border-radius: 14px;
+            padding: 18px;
+            position: relative;
+            transition: transform .3s cubic-bezier(.25, 1, .5, 1), box-shadow .3s;
+            cursor: default;
+        }
+
+        .sticky-note:hover {
+            transform: rotate(-0.8deg) translateY(-4px);
+            box-shadow: 0 12px 35px rgba(226, 27, 44, 0.18);
+        }
+
+        .sticky-note .burn-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: .6rem;
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: .08em;
+            background: rgba(226, 27, 44, 0.12);
+            color: var(--red);
+            border: 1px solid rgba(226, 27, 44, 0.25);
+            border-radius: 6px;
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .sticky-note .burn-btn:hover {
+            background: rgba(226, 27, 44, 0.35);
+        }
+
+        .sticky-note-da {
+            border-left: 3px solid var(--blue);
+        }
+
+        .sticky-note-tancet {
+            border-left: 3px solid var(--red);
+        }
+
+        .sticky-note-general {
+            border-left: 3px solid #d580ff;
+        }
+
+        /* ============================================================
+           MEAL CARDS
+        ============================================================ */
+        .meal-card {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(0, 145, 255, 0.12);
+            transition: border-color .3s;
+        }
+
+        .meal-card:hover {
+            border-color: rgba(0, 145, 255, 0.3);
+        }
+
+        /* ============================================================
+           WORKOUT EXERCISE ITEM
+        ============================================================ */
+        .ex-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(226, 27, 44, 0.12);
+            background: rgba(226, 27, 44, 0.04);
+            font-size: .78rem;
+            transition: all .2s;
+        }
+
+        .ex-item:hover {
+            border-color: rgba(226, 27, 44, 0.35);
+            background: rgba(226, 27, 44, 0.09);
+        }
+
+        /* ============================================================
+           TOAST NOTIFICATION
+        ============================================================ */
+        #sp-toast {
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            z-index: 9999;
+            background: linear-gradient(135deg, rgba(12, 16, 32, 0.98), rgba(5, 7, 15, 0.99));
+            border: 1px solid var(--red);
+            border-radius: 14px;
+            padding: 12px 20px;
+            box-shadow: var(--glow-r), 0 20px 50px rgba(0, 0, 0, 0.5);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: .88rem;
+            color: var(--text-1);
+            max-width: 300px;
+            transform: translateY(120%);
+            opacity: 0;
+            transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), opacity .4s;
+            backdrop-filter: blur(20px);
+        }
+
+        #sp-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ============================================================
+           PULSE ANIMATION
+        ============================================================ */
+        @keyframes pulse-r {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+            animation: pulse-r 1.8s ease-in-out infinite;
+            box-shadow: 0 0 6px var(--red);
+            margin-left: 6px;
+        }
+
+        /* Formula vault special styling */
+        #tancet-formula-vault {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .75rem;
+            line-height: 1.7;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media(max-width:640px) {
+            .sec-title {
+                font-size: .9rem;
+            }
+
+            .tl-item {
+                padding: 9px;
+                gap: 9px;
+            }
+
+            .meal-card {
+                padding: 10px;
+            }
+        }
+
+        /* Chart container */
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 190px;
+            margin: 0 auto;
+        }
+
+        /* Macro bar (fitness) */
+        .macro-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .7rem;
+        }
+
+        .macro-label {
+            width: 80px;
+            color: var(--text-2);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+
+        .macro-val {
+            width: 36px;
+            text-align: right;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .72rem;
+        }
+
+        /* Tancet log history */
+        .tancet-log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(0, 145, 255, 0.05);
+            border: 1px solid rgba(0, 145, 255, 0.12);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .7rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== CANVAS BACKGROUND: ANIMATED WEB ===== -->
+    <canvas id="web-canvas"></canvas>
+
+    <!-- ===== TOAST ===== -->
+    <div id="sp-toast"><span id="toast-msg">✅ Action complete.</span></div>
+
+    <!-- ===== APP ROOT ===== -->
+    <div id="app-root" class="p-3 md:p-6">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- ===== HEADER ===== -->
+            <header class="sp-header p-5 mb-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h1 class="title-gradient">🕸️ Personal Devolopment— Final Year Tracker</h1>
+                    <p style="font-size:.72rem; color:var(--text-2); margin-top:4px; letter-spacing:.03em;">
+                        Data Analytics • TANCET MCA Prep • Anti-Gravity Fitness • Web Notes Workspace
+                        <span class="live-dot"></span>
+                    </p>
+                </div>
+                <div class="day-pod flex items-center gap-3 px-4 py-3">
+                    <button class="nav-btn" onclick="adjustDay(-1)">← Prev</button>
+                    <div class="text-center" style="min-width:110px;">
+                        <span class="micro-label">Timeline Master</span>
+                        <div class="flex items-center justify-center gap-1 mt-1">
+                            <span
+                                style="font-size:.68rem; color:var(--text-2); font-family:'Rajdhani',sans-serif; font-weight:600;">Day</span>
+                            <input type="number" id="global-day-input" min="1" max="280" value="1"
+                                onchange="navigateToDay(this.value)">
+                        </div>
+                    </div>
+                    <button class="nav-btn" onclick="adjustDay(1)">Next →</button>
+                </div>
+            </header>
+
+            <!-- ===== TAB NAVIGATION ===== -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+                <button class="tab-btn tab-active" id="tab-da-core" onclick="switchTab('da-core')">🖥️ Data
+                    Analyst</button>
+                <button class="tab-btn" id="tab-tancet-prep" onclick="switchTab('tancet-prep')">📐 TANCET Vault</button>
+                <button class="tab-btn" id="tab-body-trans" onclick="switchTab('body-trans')">💪 Transformation</button>
+                <button class="tab-btn" id="tab-creative-notes" onclick="switchTab('creative-notes')">✍️
+                    Braindump</button>
+            </div>
+
+            <!-- ========================================================
+         TAB 1: DATA ANALYST TIMELINE TRACKER
+    ======================================================== -->
+            <section id="page-da-core" class="tab-page active space-y-5">
+
+                <!-- Progress Meta Bar -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="sp-card p-4">
+                        <div class="micro-label mb-1">Current Phase</div>
+                        <div id="da-phase-label"
+                            style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.85rem; color:#4db8ff; margin-top:2px;">
+                            Calculating...</div>
+                        <div id="da-phase-sub"
+                            style="font-size:.65rem; color:#ff3347; font-weight:600; margin-top:2px;"></div>
+                    </div>
+                    <div class="sp-card p-4 md:col-span-2">
+                        <div class="flex justify-between items-center">
+                            <span class="micro-label">280-Day Absolute Roadmap</span>
+                            <span id="da-prog-pct"
+                                style="font-family:'Share Tech Mono',monospace; font-size:.68rem; color:var(--blue);">0%</span>
+                        </div>
+                        <div class="prog-track">
+                            <div id="da-prog-bar" class="prog-fill" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                    <!-- LEFT: Lesson + Checklist -->
+                    <div class="lg:col-span-2 space-y-5">
+
+                        <!-- Core Lesson -->
+                        <div class="sp-card p-6">
+                            <span class="badge badge-red"
+                                style="position:absolute;top:0;right:0;border-radius:0 16px 0 10px;font-size:.55rem;padding:5px 12px;">Core
+                                Target</span>
+                            <h2 class="sec-title mb-1">📍 Today's Micro-Targeted Lesson</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                <div
+                                    style="background:rgba(0,0,0,0.3);border-radius:12px;padding:14px;border-left:3px solid var(--blue);">
+                                    <span class="micro-label" style="color:#4db8ff;">🖥️ Data Analyst Core</span>
+                                    <h3 id="da-lesson-title"
+                                        style="font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--text-1);margin-top:6px;line-height:1.3;transition:opacity .35s, transform .35s;">
+                                        Loading...</h3>
+                                    <p id="da-lesson-desc"
+                                        style="font-size:.68rem;color:var(--text-2);margin-top:8px;line-height:1.6;">
+                                    </p>
+                                </div>
+                                <div
+                                    style="background:rgba(0,0,0,0.3);border-radius:12px;padding:14px;border-left:3px solid var(--red);">
+                                    <span class="micro-label" style="color:#ff3347;">📐 TANCET Parallel Focus</span>
+                                    <h3 id="ta-lesson-title"
+                                        style="font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--text-1);margin-top:6px;line-height:1.3;transition:opacity .35s, transform .35s;">
+                                        Loading...</h3>
+                                    <p id="ta-lesson-desc"
+                                        style="font-size:.68rem;color:var(--text-2);margin-top:8px;line-height:1.6;">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hourly Checklist -->
+                        <div class="sp-card p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="sec-title">⏱️ Hourly Execution Blueprint</h2>
+                                <div class="flex gap-2">
+                                    <button id="mode-wd-btn" onclick="setMode('weekday')" class="badge badge-red"
+                                        style="cursor:pointer;padding:4px 12px;font-size:.65rem;">Weekday</button>
+                                    <button id="mode-we-btn" onclick="setMode('weekend')" class="badge badge-blue"
+                                        style="cursor:pointer;padding:4px 12px;font-size:.65rem;opacity:.6;">Weekend</button>
+                                </div>
+                            </div>
+                            <div id="da-checklist" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Chart + Score Lock -->
+                    <div class="space-y-5">
+
+                        <!-- Roadmap Velocity Doughnut -->
+                        <div class="sp-card p-6 text-center">
+                            <h3 class="sec-title mb-4">📊 Roadmap Velocity State</h3>
+                            <div class="chart-wrap mb-4"><canvas id="analyticsDoughnut"></canvas></div>
+                            <div class="grid grid-cols-3 gap-2 text-center"
+                                style="font-size:.62rem; font-family:'Share Tech Mono',monospace;">
+                                <div
+                                    style="background:rgba(0,200,120,0.08);border:1px solid rgba(0,200,120,0.2);border-radius:8px;padding:8px;">
+                                    <span id="chart-done" class="block"
+                                        style="font-size:1rem;font-weight:700;color:#00e676;">0</span>Done
+                                </div>
+                                <div
+                                    style="background:rgba(0,145,255,0.08);border:1px solid rgba(0,145,255,0.2);border-radius:8px;padding:8px;">
+                                    <span id="chart-active" class="block"
+                                        style="font-size:1rem;font-weight:700;color:#4db8ff;">1</span>Active
+                                </div>
+                                <div
+                                    style="background:rgba(226,27,44,0.08);border:1px solid rgba(226,27,44,0.2);border-radius:8px;padding:8px;">
+                                    <span id="chart-rem" class="block"
+                                        style="font-size:1rem;font-weight:700;color:#ff3347;">279</span>Left
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Score Lock -->
+                        <div class="sp-card p-5">
+                            <h3 class="sec-title mb-4">🔒 Lock Daily Performance</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="sp-label">DA Knowledge Capture (1–10)</label>
+                                    <input type="number" id="da-score" min="1" max="10" class="sp-input"
+                                        placeholder="Enter score...">
+                                </div>
+                                <div>
+                                    <label class="sp-label">TANCET Speed Accuracy (1–10)</label>
+                                    <input type="number" id="ta-score" min="1" max="10" class="sp-input"
+                                        placeholder="Enter score...">
+                                </div>
+                                <button class="btn-red w-full" onclick="saveDailyScores()">🔒 Save Day Metrics</button>
+                            </div>
+                        </div>
+
+                        <!-- Anchor Rules -->
+                        <div class="sp-card p-5" style="border-left:3px solid var(--red);">
+                            <h4
+                                style="font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#ff3347;margin-bottom:10px;">
+                                🔥 Essential Anchor Rules</h4>
+                            <ul style="list-style:none;font-size:.68rem;color:var(--text-2);line-height:2.2;">
+                                <li>⏰ <strong style="color:var(--silver);">05:00 AM</strong> — Strict wake-up. Zero
+                                    snooze.</li>
+                                <li>📵 <strong style="color:var(--silver);">06:00 PM</strong> — Social media prohibited.
+                                </li>
+                                <li>🍽️ <strong style="color:var(--silver);">08:00 PM</strong> — Kitchen locked. IF
+                                    begins.</li>
+                                <li>🟢 <strong style="color:var(--silver);">Daily</strong> — 1 GitHub green commit
+                                    minimum.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+         TAB 2: TANCET MCA & ADVANCED APTITUDE VAULT
+    ======================================================== -->
+            <section id="page-tancet-prep" class="tab-page space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                    <!-- Main Drill + Score Logger -->
+                    <div class="lg:col-span-2 space-y-5">
+
+                        <!-- Active Drill Block -->
+                        <div class="sp-card p-6">
+                            <h2 class="sec-title mb-2">📐 TANCET MCA & Advanced Aptitude Module</h2>
+                            <div
+                                style="background:rgba(0,0,0,0.35);border-radius:12px;padding:14px;border:1px solid var(--border-r);margin-bottom:16px;">
+                                <span id="tancet-drill-index" class="badge badge-red" style="font-size:.62rem;">Drill
+                                    Focus #1</span>
+                                <h4 id="tancet-drill-title"
+                                    style="font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;color:var(--text-1);margin-top:8px;line-height:1.4;">
+                                    Loading module...</h4>
+                                <p id="tancet-drill-desc"
+                                    style="font-size:.7rem;color:var(--text-2);margin-top:8px;line-height:1.6;"></p>
+                            </div>
+
+                            <!-- Speed Test Logger -->
+                            <h4
+                                style="font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-bottom:10px;">
+                                📝 Daily Speed Test Tracker</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                <input type="number" id="tancet-acc" min="1" max="10" class="sp-input"
+                                    placeholder="Accuracy (1-10)">
+                                <input type="text" id="tancet-time" class="sp-input" placeholder="Time (e.g., 48m)">
+                                <input type="number" id="tancet-score-val" min="0" max="100" class="sp-input"
+                                    placeholder="Score (0-100)">
+                                <button class="btn-blue" onclick="saveTancetLog()">Log Test</button>
+                            </div>
+                        </div>
+
+                        <!-- Test Score History -->
+                        <div class="sp-card p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="sec-title">📋 Test Score History</h3>
+                                <button onclick="clearTancetLogs()" class="badge badge-red"
+                                    style="cursor:pointer;font-size:.62rem;padding:4px 10px;">Clear All</button>
+                            </div>
+                            <div id="tancet-log-history" class="space-y-2" style="max-height:260px;overflow-y:auto;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula Vault -->
+                    <div class="space-y-5">
+                        <div class="sp-card p-6">
+                            <h3 class="sec-title mb-3">💡 Formula Anchor & Shortcut Cheat-Sheet</h3>
+                            <p style="font-size:.65rem;color:var(--text-2);margin-bottom:10px;">Auto-saved across
+                                browser refreshes. Paste shortcuts, formulas, mnemonics.</p>
+                            <textarea id="tancet-formula-vault" class="sp-textarea" style="min-height:220px;"
+                                placeholder="e.g.&#10;Speed = Distance / Time&#10;Train cross time = (L+L₂)/Relative Speed&#10;Work rate = 1/n per day&#10;..."></textarea>
+                            <button class="btn-red w-full mt-3" onclick="saveFormulaVault()">🧠 Commit to Memory
+                                Bank</button>
+                            <button class="btn-blue w-full mt-2" onclick="clearFormulaVault()">🗑️ Clear Vault</button>
+                        </div>
+
+                        <!-- Tancet Phase Progress -->
+                        <div class="sp-card p-5">
+                            <h3 class="sec-title mb-3">📊 TANCET Prep Velocity</h3>
+                            <div class="chart-wrap mb-3" style="max-width:160px;"><canvas id="tancetDoughnut"></canvas>
+                            </div>
+                            <p id="tancet-avg-label"
+                                style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-2);margin-top:8px;">
+                                Log tests to see accuracy trend</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+         TAB 3: ANTI-GRAVITY BODY TRANSFORMATION HUB
+    ======================================================== -->
+            <section id="page-body-trans" class="tab-page space-y-5">
+
+                <!-- Spider-Suit Calibration -->
+                <div class="sp-card p-5" style="border-left:3px solid var(--blue);">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="sec-title" style="color:#4db8ff;">⚙️ Spider-Suit Calibration</h3>
+                        <span class="badge badge-blue" style="font-size:.55rem;">Auto-Calculates Diet & Workout</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="sp-label">Current Weight (kg)</label>
+                            <input type="number" id="profile-weight" step="0.5" class="sp-input" placeholder="e.g., 75"
+                                onchange="saveFitnessProfile()">
+                        </div>
+                        <div>
+                            <label class="sp-label">Transformation Level</label>
+                            <select id="profile-level" class="sp-input" style="cursor:pointer;"
+                                onchange="saveFitnessProfile()">
+                                <option value="Beginner">Level 1: Beginner</option>
+                                <option value="Intermediate">Level 2: Intermediate</option>
+                                <option value="Expert">Level 3: Expert</option>
+                                <option value="Pro">Level 4: Pro (Savage Mode)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="sp-card p-4 text-center">
+                        <div class="micro-label">Daily Calorie Target</div>
+                        <div id="fit-cal-target"
+                            style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;color:var(--red);margin-top:4px;">
+                            1800 Kcal</div>
+                    </div>
+                    <div class="sp-card p-4 text-center">
+                        <div class="micro-label">Toolkit Available</div>
+                        <div
+                            style="font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.8rem;color:#4db8ff;margin-top:4px;">
+                            2×6kg DB + Jump Rope</div>
+                    </div>
+                    <div class="sp-card p-4 text-center">
+                        <div class="micro-label">Fasting Cutoff</div>
+                        <div
+                            style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;color:#ffd600;margin-top:4px;">
+                            08:00 PM Strict</div>
+                    </div>
+                    <div class="sp-card p-4 text-center">
+                        <div class="micro-label">Phase Weight Target</div>
+                        <div id="fit-phase-target"
+                            style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;color:#00e676;margin-top:4px;">
+                            Loading...</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                    <!-- LEFT: Meals + Workout -->
+                    <div class="lg:col-span-2 space-y-5">
+
+                        <!-- One-Pot Meals -->
+                        <div class="sp-card p-6" style="border-left:3px solid var(--blue);">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="sec-title" style="color:#4db8ff;">🍛 1800 Kcal One-Pot Daily Meal Matrix</h3>
+                                <span class="badge badge-blue" style="font-size:.55rem;">Zero Cooking Fatigue</span>
+                            </div>
+                            <div id="meal-injector" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+                        </div>
+
+                        <!-- Home Workout -->
+                        <div class="sp-card p-6" style="border-left:3px solid var(--red);">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="sec-title" style="color:#ff3347;">🏋️ Daily 2-Muscle Home Workout Lab</h3>
+                                <span id="workout-badge" class="badge badge-red">Loading...</span>
+                            </div>
+                            <div id="workout-injector" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Metric Input + Transformation Chart -->
+                    <div class="space-y-5">
+
+                        <!-- Metric Entry -->
+                        <div class="sp-card p-5">
+                            <h3 class="sec-title mb-4">📝 Daily Metrics Entry</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="sp-label">Steps Completed Today</label>
+                                    <input type="number" id="fit-steps" class="sp-input" placeholder="e.g., 10000">
+                                </div>
+                                <div>
+                                    <label class="sp-label">Body Weight (kg)</label>
+                                    <input type="number" id="fit-weight" step="0.1" class="sp-input"
+                                        placeholder="e.g., 84.5">
+                                </div>
+                                <div>
+                                    <label class="sp-label">Meals Logged Today (0–3)</label>
+                                    <input type="number" id="fit-meals" min="0" max="3" class="sp-input"
+                                        placeholder="0 - 3">
+                                </div>
+                                <div>
+                                    <label class="sp-label">Workout Completed?</label>
+                                    <select id="fit-workout-done" class="sp-input" style="cursor:pointer;">
+                                        <option value="yes">✅ Yes — Full Session</option>
+                                        <option value="partial">⚡ Partial Session</option>
+                                        <option value="no">❌ Rest / Missed</option>
+                                    </select>
+                                </div>
+                                <button class="btn-gradient w-full" onclick="saveFitnessMetrics()">🔒 Lock Fitness
+                                    State</button>
+                            </div>
+                        </div>
+
+                        <!-- Transformation Doughnut Chart -->
+                        <div class="sp-card p-6 text-center">
+                            <h3 class="sec-title mb-3">📊 Transformation Status</h3>
+                            <div class="chart-wrap mb-3" style="max-width:170px;"><canvas id="fitnessDoughnut"></canvas>
+                            </div>
+                            <p id="fit-compliance-label"
+                                style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-2);">
+                                Log metrics to render</p>
+                            <div id="fit-weight-log" class="space-y-1 mt-3" style="max-height:120px;overflow-y:auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+         TAB 4: SPIDER-SENSE BRAINDUMP & CREATIVE NOTE PAD
+    ======================================================== -->
+            <section id="page-creative-notes" class="tab-page space-y-5">
+
+                <div class="sp-card p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5">
+                        <div>
+                            <h2 class="title-gradient" style="font-size:1.3rem;">✍️ SPIDER-SENSE BRAINDUMP CANVAS</h2>
+                            <p style="font-size:.65rem;color:var(--text-2);margin-top:3px;">Pin instant thoughts, code
+                                bugs, strategy insights. All persisted via LocalStorage.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="clearAllNotes()" class="badge badge-red"
+                                style="cursor:pointer;padding:5px 12px;font-size:.65rem;">🔥 Clear All Pins</button>
+                        </div>
+                    </div>
+
+                    <!-- Note Creator -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="md:col-span-2 space-y-2">
+                            <input type="text" id="note-heading" class="sp-input"
+                                style="border-radius:10px;font-family:'Exo 2',sans-serif;font-size:.85rem;font-weight:600;"
+                                placeholder="📌 Topic Heading or Title...">
+                            <textarea id="note-body" class="sp-textarea" style="min-height:110px;"
+                                placeholder="Dump thoughts, bugs, shortcuts, formulae, strategies..."></textarea>
+                        </div>
+                        <div class="sp-card p-4 flex flex-col justify-between">
+                            <div>
+                                <span class="micro-label"
+                                    style="color:#4db8ff;margin-bottom:10px;display:block;">Classify Priority Tag</span>
+                                <div class="space-y-3">
+                                    <label
+                                        style="display:flex;align-items:center;gap:8px;font-size:.78rem;cursor:pointer;">
+                                        <input type="radio" name="note-tag" value="da" checked
+                                            style="accent-color:var(--blue);width:14px;height:14px;">
+                                        <span class="badge badge-blue">🖥️ Data Analytics</span>
+                                    </label>
+                                    <label
+                                        style="display:flex;align-items:center;gap:8px;font-size:.78rem;cursor:pointer;">
+                                        <input type="radio" name="note-tag" value="tancet"
+                                            style="accent-color:var(--red);width:14px;height:14px;">
+                                        <span class="badge badge-red">📐 TANCET Rule</span>
+                                    </label>
+                                    <label
+                                        style="display:flex;align-items:center;gap:8px;font-size:.78rem;cursor:pointer;">
+                                        <input type="radio" name="note-tag" value="general"
+                                            style="accent-color:#d580ff;width:14px;height:14px;">
+                                        <span class="badge badge-purple">💡 Strategy Idea</span>
+                                    </label>
+                                    <label
+                                        style="display:flex;align-items:center;gap:8px;font-size:.78rem;cursor:pointer;">
+                                        <input type="radio" name="note-tag" value="fitness"
+                                            style="accent-color:#00e676;width:14px;height:14px;">
+                                        <span class="badge badge-green">💪 Fitness Note</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn-gradient w-full mt-4" onclick="pinNewNote()" style="margin-top:12px;">📌
+                                Pin to Canvas</button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-3">
+                        <h3
+                            style="font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-2);">
+                            📌 Active Workspace Pins</h3>
+                        <span id="note-count-badge" class="badge badge-blue">0 Pins</span>
+                    </div>
+                    <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER CREDENTIALS ===== -->
+            <footer
+                style="text-align: center; padding: 20px 0; margin-top: 20px; border-top: 1px solid var(--border-b);">
+                <p
+                    style="font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: var(--text-2); letter-spacing: 0.05em;">
+                    Developed by and Ownership belongs to <strong style="color: var(--blue);">sharfudeen
+                        mansoor</strong>
+                </p>
+            </footer>
+
+        </div><!-- max-w -->
+    </div><!-- app-root -->
+
+    <!-- ====================================================================
+     MAIN JAVASCRIPT ENGINE
+==================================================================== -->
+    <script>
+        "use strict";
+
+        // ============================================================
+        // DATA ARRAYS — 280-Day DA & TA Lessons
+        // ============================================================
+        const coreDaLessons = [
+            "Introduction to Spreadsheet Structures & Column-Row Data Alignments",
+            "Absolute vs Relative Cell Locking Mechanics ($A$1 Syntax)",
+            "Dynamic Aggregation Formulas (SUM, AVERAGE, MIN/MAX Matrix)",
+            "Conditional Math Frameworks (SUMIF & COUNTIF Filtering Operations)",
+            "Multi-Criteria Conditional Math Logic (SUMIFS & COUNTIFS Systems)",
+            "Text Parsing Frameworks (UPPER, LOWER, PROPER Data Sanitation)",
+            "Advanced Text Isolators (LEFT, RIGHT, MID String Extraction Rules)",
+            "Data Clean Tasks (TRIM Space Cleansing & CLEAN Logic Scripts)",
+            "String Mutations (CONCATENATE & TEXTJOIN Dynamic Merges)",
+            "Logical Argument Testing Operations (Nested IF Core Layouts)",
+            "Advanced Logical Matrices (Multi-Condition AND/OR Integration)",
+            "Modern Switch Alternatives (IFS Function & SWITCH Array Routes)",
+            "Temporal Data Calculations (DATEDIF Analytics & NETWORKDAYS Calculations)",
+            "Index Reference Architecture (Classic VLOOKUP Exact Match Configurations)",
+            "Horizontal Index Lookups (HLOOKUP Syntax & Row Index Matrices)",
+            "Modern Cross Lookups Execution (Advanced XLOOKUP Fluid Array Slices)",
+            "Two-Dimensional Target Data Grids (INDEX & MATCH Nesting Functions)",
+            "Basic Tabular Synthesis (Initializing Pivot Tables Over Raw Datasets)",
+            "Pivot Table Value Multi-Layers (Calculated Percentages & Grouped Dates)",
+            "Advanced Pivot Controls (Slicers, Timelines & Grid Chart Linkages)",
+            "Relational Database Systems Theory (Tables, Primary Keys & Foreign Keys)",
+            "SQL Server Management Studio Environment Booting & Configurations",
+            "SQL Foundations: SELECT Statement Fields Isolation Slices",
+            "SQL Filters: Isolate Text and Integers via Strict WHERE Operators",
+            "SQL Patterns: String Token Pattern Extraction via LIKE '%Text%' Tests",
+            "SQL Logical Combos: Chaining Rules using AND, OR, NOT Keywords",
+            "SQL Sorting Mechanics: Ordering Outputs utilizing ORDER BY (ASC/DESC)",
+            "SQL Top Elements: Fetching Boundary Limits using TOP/LIMIT Clauses",
+            "SQL Basic Aggregations: Evaluating Database COUNT, SUM, AVG Scores",
+            "SQL Analytical Grouping: Section Analysis via GROUP BY Frameworks",
+            "SQL Aggregate Filtering: Enforcing Post-Group Restrictions via HAVING Rules",
+            "SQL Set Rules: Eliminating Row Duplications via SELECT DISTINCT Matrices",
+            "SQL Table Merges: Combining Join Operations Theory & Architecture",
+            "SQL Inner Intersects: Extracting Shared Rows via INNER JOIN Engines",
+            "SQL Left Intersects: Retaining Left Arrays via LEFT OUTER JOIN Syntax",
+            "SQL Right Intersects: Retaining Right Arrays via RIGHT OUTER JOIN Syntax",
+            "SQL Cross Combinations: Generating Structural Cartesians via CROSS JOIN",
+            "SQL Data Integration: Stacking Vertical Query Results using UNION & UNION ALL",
+            "SQL Subquery Logic: Writing Nested Inner Queries in Filter Fields",
+            "SQL Subquery Evaluation: Correlated Nested Queries Optimization",
+            "Python Architecture: Setting Up Anaconda Environments & VS Code Systems",
+            "Python Objects: Variable Data Storage Types (Strings, Floats, Integers)",
+            "Python Lists: Array Mutability Patterns & Positional Data Indexing Slices",
+            "Python Dictionaries: Managing Complex Unstructured Key-Value Storage Brackets",
+            "Python Logic Loops: Designing Iterations via FOR Loops & IF Condition Tests",
+            "Python Functions: Writing Reusable Structural Blocks with def and return",
+            "Python Vector Processing: Initializing High Performance NumPy Arrays",
+            "Python Matrix Processing: Multidimensional Matrix Calculations using NumPy",
+            "Python Data Structures: Creating Pandas Series Indexes & Data Alignment",
+            "Python Tabular Slices: Importing External CSV/JSON into Pandas DataFrames",
+            "Python Row Slices: Indexing Rows and Columns via Pandas loc and iloc Drivers",
+            "Python Query Slices: Boolean Mask Condition Filtering on Pandas Structures",
+            "Data Cleansing: Isolate Empty Rows & Missing Values via Pandas isna()",
+            "Data Cleansing: Dropping Corrupted Null Records via Pandas dropna() Parameters",
+            "Data Cleansing: Imputing Numerical Gaps using Pandas fillna() Calculations",
+            "Data Cleansing: Removing Duplicate Rows via Pandas drop_duplicates Scripts",
+            "Data Cleansing: Text Array Character Standardization and Case Alignment",
+            "Data Cleansing: Formatting Time Vectors and Standardizing Date Formats",
+            "Data Cleansing: Structural Data Type Transformations using Pandas astype()",
+            "Outlier Tracking: Calculating Distribution IQR Metrics & Fence Envelopes",
+            "Outlier Management: Dropping vs Cap-Transforming Anomalous Metric Outliers",
+            "Data Encoding Frameworks: Transforming Categories via One-Hot Vector Layouts",
+            "Data Acquisition: Web Scraping Architecture via HTML Tag Document Trees",
+            "Data Acquisition: Initializing BeautifulSoup Web Scraping Parsers",
+            "Data Acquisition: Handling Pagination Crawlers in Complex Web Scraping Scripts",
+            "Data Acquisition: REST API Operations using Python requests Library Hooks",
+            "Data Acquisition: Deconstructing Nested API JSON Blocks into Pandas Formats",
+            "Business Intelligence: Tableau Desktop & Power BI Installation Models",
+            "BI Dimensions: Loading Flat Data Matrices & Setting Up Star Schema Linkages",
+            "BI Dimensions: Defining Clear Dimensional vs Fact Table Data Attributes",
+            "BI DAX Syntax: Writing Continuous Calculated Columns inside Power BI",
+            "BI DAX Measures: Designing High Performance Dynamic Visual Aggregate Measures",
+            "BI Charting Frameworks: Deploying High Density Functional Scatter Formations",
+            "BI Dashboard Slices: Injecting Conversion Funnels & Performance Gauge Meters",
+            "BI Custom Control Layouts: Linking Cross Filter Slicers and Drilldown Logic",
+            "Mathematical Foundations: Mean vs Median Stability inside Skewed Curves",
+            "Mathematical Foundations: Calculating Standard Deviation Spread and Variances",
+            "Mathematical Foundations: Testing Skewness Directions & Distribution Tails",
+            "Statistical Inference: Drafting Null vs Alternative Hypothesis Matrix Claims",
+            "Statistical Inference: Executing Timed Two-Sample Independent T-Tests",
+            "Statistical Inference: Setting Alpha Thresholds & Evaluating Metric P-Values",
+            "Statistical Inference: Calculating Pearson and Spearman Co-variance Links",
+            "Predictive Modeling: Ordinary Least Squares Simple Linear Regression Layouts",
+            "Machine Learning Primitives: Differentiating Supervised vs Unsupervised Layouts",
+            "Machine Learning Algorithms: Training Logistic Regression Binary Classifiers",
+            "Machine Learning Clustering: Processing K-Means Spatial Vector Formations",
+            "Big Data Architectures: Horizontal Cluster Scaling & Storage Limits Theory",
+            "Big Data Architectures: Hadoop Distributed File System (HDFS) Storage Blocks",
+            "Big Data Architectures: Writing Data Slices over PySpark Cluster Transformations",
+            "Portfolio Capstone Project Strategy: Continuous Integration and GitHub Green Commits"
+        ];
+
+        const coreTaLessons = [
+            "Quantitative Aptitude: Fractional Value Conversions & Base Percentages",
+            "Quantitative Aptitude: Tracking Successive Continuous Percentage Mutations",
+            "Quantitative Aptitude: Ratio Partitioning Frameworks for Partnership Capitals",
+            "Quantitative Aptitude: Dilution Concentration Computations inside Compound Mixtures",
+            "Quantitative Aptitude: Weighted Average Computations over Disparate Group Scales",
+            "Quantitative Aptitude: Linear Time, Speed and Absolute Distance Equations",
+            "Quantitative Aptitude: Closing Relative Speed Intersections between Moving Objects",
+            "Quantitative Aptitude: Train Length Cross Timing Scenarios over Static Posts",
+            "Quantitative Aptitude: River Current Vectors: Upstream vs Downstream Calculations",
+            "Quantitative Aptitude: Time and Work Task Output Rates of Grouped Labors",
+            "Quantitative Aptitude: Inflow vs Outflow Rates inside Cistern Pipeline Grids",
+            "Quantitative Aptitude: Quadratic Factorization Sequences and Root Isolation",
+            "Logical Reasoning: Deciphering Patterns in Arithmetic Progression Sequences",
+            "Logical Reasoning: Geometric and Prime Factor Step Jumps in Number Series",
+            "Logical Reasoning: Alpha-Numeric Pattern Encodings and Structural String Cipher Codes",
+            "Logical Reasoning: Deconstructing Family Hierarchies via Coded Relation Trees",
+            "Logical Reasoning: Circular Seating Arrangement Constraint Layout Profiles",
+            "Logical Reasoning: Multi-Row Parallel Positional Grid Alignment Strategies",
+            "Logical Reasoning: Directional Coordinates Spatial Navigation Vector Tests",
+            "Logical Reasoning: Syllogism Validity via Intersecting Venn Diagrams",
+            "Computer Awareness: Operating System Thread States & Micro-Lifecycles",
+            "Computer Awareness: Virtual Memory Page Allocation Fault Minimization Rules",
+            "Computer Awareness: CPU Scheduling Rules: Round Robin vs Shortest Job First",
+            "Computer Awareness: Deadlock Avoidance Tactics utilizing Bankers Optimization Algorithms",
+            "Computer Awareness: Normalizing Databases: 1NF Atomic Structure Isolation Steps",
+            "Computer Awareness: Normalizing Databases: 2NF Partial Functional Dependency Removal",
+            "Computer Awareness: Normalizing Databases: 3NF/BCNF Transitive Key Clean Task Steps",
+            "Computer Awareness: Mapping the 7-Layer OSI Networking Protocol Architecture",
+            "Computer Awareness: Analyzing TCP 3-Way Handshake Flags & Safe Data Flows",
+            "Computer Awareness: Object-Oriented Patterns: Class Blueprint Constructors",
+            "Computer Awareness: Object-Oriented Patterns: Runtime Method Overriding Polymorphism",
+            "Computer Awareness: Object-Oriented Patterns: Abstract Virtual Interface Links",
+            "TANCET Preparation Strategy: Reviewing Past 5-Year Question Papers Data",
+            "TANCET Preparation Drill: Live 120-Minute Chrono Mock Examination Simulation"
+        ];
+
+        // ============================================================
+        // PHASE META
+        // ============================================================
+        const phaseMatrix = [
+            { maxDay: 40, label: "🔥 Phase 1: Spreadsheets & Foundation SQL", weightTarget: "-7 kg milestone" },
+            { maxDay: 120, label: "⚙️ Phase 2: Python Frameworks & Tabular Engines", weightTarget: "-20 kg milestone" },
+            { maxDay: 180, label: "🚀 Phase 3: Web Scraping & BI Visualizations", weightTarget: "-30 kg milestone" },
+            { maxDay: 240, label: "🏗️ Phase 4: Math Statistics & Data Inference", weightTarget: "-42 kg milestone" },
+            { maxDay: 280, label: "🏆 Phase 5: Capstone Sprints & TANCET Checkmate", weightTarget: "-50 kg ACHIEVED!" }
+        ];
+
+        // ============================================================
+        // HOURLY TIMELINE DATA
+        // ============================================================
+        const timelineWeekday = [
+            { hr: "05:00 AM", task: "WAKE UP — Zero snooze. Drink 400ml warm water immediately.", sector: "🌅 RISE" },
+            { hr: "05:20 AM", task: "FAT LOSS WORKOUT — Designated cardio/HIIT as per today's target muscle groups.", sector: "💪 FITNESS" },
+            { hr: "07:00 AM", task: "DEEP WORK 1 — Study today's precise micro-targeted Data Analyst syllabus topic.", sector: "🖥️ ANALYTICS" },
+            { hr: "08:30 AM", task: "DEEP WORK 2 — Solve 30 timed MCQs on today's Aptitude/TANCET drill topic.", sector: "📐 APTITUDE" },
+            { hr: "10:15 AM", task: "COLLEGE PREP — Advanced study of upcoming semester lecture notes.", sector: "📖 ACADEMIC" },
+            { hr: "11:00 AM", task: "FINAL YEAR PROJECT — Write data clean functions or push structured scripts.", sector: "🔬 PROJECT" },
+            { hr: "12:00 PM", task: "COLLEGE TIME (LOCKED) — Full attendance block + travel transit.", sector: "🏫 COLLEGE" },
+            { hr: "07:30 PM", task: "LIGHT DINNER — Clean proteins + heavy fibers. No white rice past 8 PM.", sector: "🍽️ NUTRITION" },
+            { hr: "08:30 PM", task: "DEEP WORK 3 — Code execution practice or push scripts to GitHub.", sector: "💻 PRACTICE" },
+            { hr: "10:00 PM", task: "SLEEP PROTOCOL — Lights out. Initialize 7-hour cognitive rest loop.", sector: "😴 SLEEP" }
+        ];
+
+        const timelineWeekend = [
+            { hr: "05:00 AM", task: "WAKE UP — Maintain circadian rhythm. Discipline has no holidays.", sector: "🌅 RISE" },
+            { hr: "05:20 AM", task: "EXTENDED WORKOUT — 70 min steady cardio + structural core loading.", sector: "💪 FITNESS" },
+            { hr: "07:30 AM", task: "DEEP WORK 1 — 2h continuous advanced dataset cleaning or visual analytics.", sector: "🖥️ ANALYTICS" },
+            { hr: "09:45 AM", task: "DEEP WORK 2 — Full 120-minute timed TANCET mock questionnaire.", sector: "📐 FULL MOCK" },
+            { hr: "02:30 PM", task: "DEEP WORK 3 — Data engineering logic updates to final year project.", sector: "🔬 PROJECT" },
+            { hr: "07:30 PM", task: "WEEKLY AUDIT — Evaluate performance metrics across all 4 parameters.", sector: "📊 AUDIT" },
+            { hr: "10:00 PM", task: "SLEEP PROTOCOL — Immediate blackout execution.", sector: "😴 SLEEP" }
+        ];
+
+        // ============================================================
+        // ONE-POT MEAL MATRIX — 7 unique rotation days
+        // ============================================================
+        const onePotMeals = [
+            {
+                day: "Monday — Protein Engine Day",
+                breakfast: { name: "High-Protein Oat Porridge", kcal: 520, desc: "Oats boiled with 1.5 scoops whey, 1.5 tbsp peanut butter, 1 glass full-fat milk. One bowl, all macros covered." },
+                lunch: { name: "Chicken Soya Chunk Biryani Pot", kcal: 680, desc: "130g chicken breast + 30g soya chunks cooked with 1.5 cups basmati, spices, curd mix. Single pot." },
+                dinner: { name: "Egg & Dal Tadka Khichdi", kcal: 600, desc: "3 boiled eggs over 1 cup moong dal khichdi (rice + lentils pressure-cooked). One vessel, high satiety." }
+            },
+            {
+                day: "Tuesday — Carb-Load Day",
+                breakfast: { name: "Banana Oats Protein Smoothie Bowl", kcal: 500, desc: "Oats + 2 bananas + 1 scoop protein blended thick. Topped with peanut butter. One bowl." },
+                lunch: { name: "Canned Tuna Lemon Rice Pot", kcal: 650, desc: "1 can tuna + 1.5 cups lemon rice + green peas cooked together in single pot." },
+                dinner: { name: "Paneer Palak Dal Pot", kcal: 650, desc: "100g paneer + spinach + chana dal pressure cooked with minimal oil. Eaten with 2 rotis." }
+            },
+            {
+                day: "Wednesday — Fat-Burn Push Day",
+                breakfast: { name: "Egg-Veggie Masala Omelette Wrap", kcal: 480, desc: "4 eggs + onion + tomato + capsicum omelette wrapped in 2 whole wheat rotis. One pan." },
+                lunch: { name: "High-Fiber Rajma Brown Rice Bowl", kcal: 700, desc: "1 cup rajma cooked with 1.5 cups brown rice in pressure cooker. Spiced minimal ghee." },
+                dinner: { name: "Grilled Chicken & Vegetable Soup", kcal: 620, desc: "130g chicken + carrot + beans + tomato boiled soup with bone broth base. One large pot." }
+            },
+            {
+                day: "Thursday — High-Protein Spike Day",
+                breakfast: { name: "Peanut Butter Roti Stack", kcal: 510, desc: "3 whole wheat rotis with 3 tbsp peanut butter + 1 glass milk. Zero cooking beyond roasting." },
+                lunch: { name: "Mutton Keema Fried Rice Pot", kcal: 720, desc: "100g mutton mince + 1.5 cups basmati fried together in single wok with minimal oil." },
+                dinner: { name: "3-Egg Curd Rice Bowl", kcal: 570, desc: "3 boiled eggs over 1 bowl curd rice with cucumber and carrot. Full cooling meal." }
+            },
+            {
+                day: "Friday — Low-Carb Mode Day",
+                breakfast: { name: "Moong Dal Chilla Stack", kcal: 490, desc: "Soaked moong dal ground and pan-fried into 5 thick pancakes with curd. One pan batch." },
+                lunch: { name: "Chicken Tomato Curry Pot + 2 Rotis", kcal: 690, desc: "130g chicken in thick tomato-based masala. 2 rotis alongside. One pot complete meal." },
+                dinner: { name: "Masoor Dal Egg Drop Soup", kcal: 620, desc: "3 eggs dropped into boiling masoor dal soup with spinach. Single pot, minimal oil." }
+            },
+            {
+                day: "Saturday — Maximum Protein Day",
+                breakfast: { name: "Scrambled Egg & Oats Protein Bowl", kcal: 540, desc: "4 scrambled eggs mixed directly into cooked oats + peanut butter. One pan fusion meal." },
+                lunch: { name: "Full Chicken Leg Piece Rice Pot", kcal: 710, desc: "2 full chicken drumsticks pressure-cooked with 1.5 cups rice and spices. Maximum protein." },
+                dinner: { name: "Soya Chunk Vegetable Stir Fry", kcal: 550, desc: "60g soya chunks + mixed vegetables stir-fried in one wok. Eaten with 2 chapatis." }
+            },
+            {
+                day: "Sunday — Recovery + Refuel Day",
+                breakfast: { name: "Ragi Malt Protein Shake", kcal: 480, desc: "2 tbsp ragi powder + 1 scoop protein + 1 glass milk blended. Zero cooking needed." },
+                lunch: { name: "Full South Indian Sambar Rice One-Pot", kcal: 700, desc: "Pressure-cooked 1.5 cups rice with sambar vegetables and toor dal. One vessel complete." },
+                dinner: { name: "Paneer Bhurji Roti Stack", kcal: 620, desc: "100g paneer scrambled with tomato, onion, masala in single pan. 3 rotis alongside." }
+            }
+        ];
+
+        // ============================================================
+        // WORKOUT MATRIX — 7 unique rotation days (6kg DB + Rope)
+        // ============================================================
+        const workoutMatrix = [
+            {
+                muscles: "Chest + Triceps",
+                exercises: [
+                    { name: "DB Floor Press", sets: "4×12", note: "Slow 3-sec negative eccentric", kcalBurn: 90 },
+                    { name: "DB Chest Fly (Floor)", sets: "3×15", note: "Squeeze at peak contraction", kcalBurn: 70 },
+                    { name: "Close-Grip DB Press", sets: "4×12", note: "Elbows tucked tight to ribs", kcalBurn: 80 },
+                    { name: "DB Tricep Kickback", sets: "3×15 each", note: "Full extension at top", kcalBurn: 60 },
+                    { name: "Jump Rope Intervals", sets: "5×2 min", note: "Alternate fast/slow pace", kcalBurn: 150 }
+                ]
+            },
+            {
+                muscles: "Back + Biceps",
+                exercises: [
+                    { name: "DB Bent-Over Row", sets: "4×12 each", note: "Elbow drive to hip", kcalBurn: 100 },
+                    { name: "DB Renegade Row", sets: "3×10 each", note: "Core locked throughout", kcalBurn: 85 },
+                    { name: "DB Bicep Curl", sets: "4×15", note: "No momentum, strict form", kcalBurn: 65 },
+                    { name: "DB Hammer Curl", sets: "3×12 each", note: "Neutral grip, full ROM", kcalBurn: 60 },
+                    { name: "Jump Rope Intervals", sets: "5×2 min", note: "Double-unders if capable", kcalBurn: 150 }
+                ]
+            },
+            {
+                muscles: "Shoulders + Abs",
+                exercises: [
+                    { name: "DB Shoulder Press", sets: "4×12", note: "Full overhead lockout", kcalBurn: 85 },
+                    { name: "DB Lateral Raise", sets: "4×15", note: "Lead with elbows, slow drop", kcalBurn: 70 },
+                    { name: "DB Front Raise", sets: "3×12", note: "Controlled, thumb-up grip", kcalBurn: 65 },
+                    { name: "Plank DB Pull-Through", sets: "3×20", note: "Hips stay square", kcalBurn: 75 },
+                    { name: "Jump Rope Tabata", sets: "8×20s on / 10s off", note: "Max effort rounds", kcalBurn: 160 }
+                ]
+            },
+            {
+                muscles: "Legs + Glutes",
+                exercises: [
+                    { name: "DB Goblet Squat", sets: "4×15", note: "Chest tall, heels drive", kcalBurn: 110 },
+                    { name: "DB Romanian Deadlift", sets: "4×12", note: "Hip hinge, hamstring stretch", kcalBurn: 100 },
+                    { name: "DB Reverse Lunge", sets: "3×12 each", note: "Back knee nearly touches", kcalBurn: 90 },
+                    { name: "DB Hip Thrust (Floor)", sets: "4×15", note: "Glute squeeze at top", kcalBurn: 85 },
+                    { name: "Jump Rope — Endurance", sets: "3×4 min", note: "Steady 120 rpm rhythm", kcalBurn: 160 }
+                ]
+            },
+            {
+                muscles: "Full Body — HIIT Circuit",
+                exercises: [
+                    { name: "DB Thruster (Squat to Press)", sets: "4×10", note: "Explosive drive at top", kcalBurn: 130 },
+                    { name: "DB Burpee", sets: "3×8", note: "DB stays in hands throughout", kcalBurn: 120 },
+                    { name: "DB Man-Maker", sets: "3×6", note: "Row + push-up + squat + press", kcalBurn: 140 },
+                    { name: "DB Swing", sets: "4×15", note: "Hip snap, not arm lift", kcalBurn: 110 },
+                    { name: "Jump Rope AMRAP", sets: "10 min non-stop", note: "Sustain 130+ rpm", kcalBurn: 180 }
+                ]
+            },
+            {
+                muscles: "Arms + Core Shred",
+                exercises: [
+                    { name: "DB Concentration Curl", sets: "4×12 each", note: "Elbow on inner thigh", kcalBurn: 60 },
+                    { name: "DB Overhead Tricep Ext.", sets: "4×12", note: "Keep elbows by ears", kcalBurn: 65 },
+                    { name: "DB Alternating Curl", sets: "3×15 each", note: "Supinate at top", kcalBurn: 60 },
+                    { name: "DB Woodchop Twists", sets: "3×12 each side", note: "Rotate from thoracic", kcalBurn: 75 },
+                    { name: "Jump Rope High Knees", sets: "4×2 min", note: "Drive knees past waist", kcalBurn: 150 }
+                ]
+            },
+            {
+                muscles: "Chest + Legs (Compound Day)",
+                exercises: [
+                    { name: "DB Floor Press", sets: "4×10", note: "Explosive push phase", kcalBurn: 90 },
+                    { name: "DB Squat Jump", sets: "4×10", note: "Land soft, DB at chest", kcalBurn: 120 },
+                    { name: "DB Push-Up Row", sets: "3×8 each", note: "Push-up then row one side", kcalBurn: 95 },
+                    { name: "DB Split Squat", sets: "3×12 each", note: "3-sec down, explosive up", kcalBurn: 100 },
+                    { name: "Jump Rope Pyramid", sets: "1-2-3-2-1 min", note: "Rest 30s between rounds", kcalBurn: 145 }
+                ]
+            }
+        ];
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let activeDayCounter = 1;
+        let selectedMode = 'weekday';
+        let analyticsChart = null;
+        let tancetChart = null;
+        let fitnessChart = null;
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        window.onload = function () {
+            const saved = localStorage.getItem('sp_active_day');
+            if (saved) activeDayCounter = parseInt(saved);
+            document.getElementById('global-day-input').value = activeDayCounter;
+
+            const dow = new Date().getDay();
+            selectedMode = (dow === 0 || dow === 6) ? 'weekend' : 'weekday';
+
+            initCharts();
+            loadFitnessProfile();
+            masterRefresh();
+            loadFormulaVault();
+            renderTancetLogs();
+            renderNotes();
+            renderFitnessWeightLog();
+            initWebCanvas();
+        };
+
+        // ============================================================
+        // DAY NAVIGATION
+        // ============================================================
+        function adjustDay(step) {
+            const next = activeDayCounter + step;
+            if (next >= 1 && next <= 280) {
+                activeDayCounter = next;
+                document.getElementById('global-day-input').value = activeDayCounter;
+                localStorage.setItem('sp_active_day', activeDayCounter);
+                fadeTopics(masterRefresh);
+            }
+        }
+
+        function navigateToDay(val) {
+            const n = parseInt(val);
+            if (n >= 1 && n <= 280) {
+                activeDayCounter = n;
+                localStorage.setItem('sp_active_day', activeDayCounter);
+                fadeTopics(masterRefresh);
+            }
+        }
+
+        function fadeTopics(cb) {
+            const els = ['da-lesson-title', 'ta-lesson-title', 'tancet-drill-title'];
+            els.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.style.opacity = '0'; el.style.transform = 'translateY(6px)'; }
+            });
+            setTimeout(() => {
+                cb();
+                els.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }
+                });
+            }, 280);
+        }
+
+        // ============================================================
+        // MASTER REFRESH
+        // ============================================================
+        function masterRefresh() {
+            const phase = phaseMatrix.find(p => activeDayCounter <= p.maxDay) || phaseMatrix[phaseMatrix.length - 1];
+
+            // === Tab 1: DA ===
+            document.getElementById('da-phase-label').textContent = phase.label;
+            document.getElementById('da-phase-sub').textContent = 'Weight Target: ' + phase.weightTarget;
+
+            const pct = (activeDayCounter / 280) * 100;
+            document.getElementById('da-prog-bar').style.width = pct + '%';
+            document.getElementById('da-prog-pct').textContent = Math.round(pct) + '% Complete';
+
+            const iDA = (activeDayCounter - 1) % coreDaLessons.length;
+            const iTA = (activeDayCounter - 1) % coreTaLessons.length;
+
+            document.getElementById('da-lesson-title').textContent = 'Lesson #' + (iDA + 1) + ': ' + coreDaLessons[iDA];
+            document.getElementById('da-lesson-desc').textContent = 'Complete hands-on practice for "' + coreDaLessons[iDA] + '". Build and commit code to your GitHub portfolio.';
+
+            document.getElementById('ta-lesson-title').textContent = 'Topic #' + (iTA + 1) + ': ' + coreTaLessons[iTA];
+            document.getElementById('ta-lesson-desc').textContent = 'Solve 30 timed problems on "' + coreTaLessons[iTA] + '". Log mistakes in your notebook.';
+
+            buildChecklist();
+            updateAnalyticsChart();
+
+            // === Tab 2: TANCET ===
+            document.getElementById('tancet-drill-index').textContent = 'Drill Focus #' + (iTA + 1);
+            document.getElementById('tancet-drill-title').textContent = coreTaLessons[iTA];
+            document.getElementById('tancet-drill-desc').textContent = 'Execute exactly 30 timed structured problem sets on this module. Use a countdown timer. Record all formula errors in the vault below.';
+
+            // === Tab 3: Fitness ===
+            document.getElementById('fit-phase-target').textContent = phase.weightTarget;
+            renderMeals();
+            renderWorkout();
+        }
+
+        // ============================================================
+        // MODE TOGGLE
+        // ============================================================
+        function setMode(mode) {
+            selectedMode = mode;
+            const wd = document.getElementById('mode-wd-btn');
+            const we = document.getElementById('mode-we-btn');
+            if (mode === 'weekday') {
+                wd.style.opacity = '1'; we.style.opacity = '.5';
+            } else {
+                we.style.opacity = '1'; wd.style.opacity = '.5';
+            }
+            buildChecklist();
+        }
+
+        // ============================================================
+        // HOURLY CHECKLIST
+        // ============================================================
+        function buildChecklist() {
+            const container = document.getElementById('da-checklist');
+            container.innerHTML = '';
+            const src = selectedMode === 'weekday' ? timelineWeekday : timelineWeekend;
+            const key = 'sp_tl_day' + activeDayCounter + '_' + selectedMode;
+            const done = JSON.parse(localStorage.getItem(key)) || [];
+
+            src.forEach((item, idx) => {
+                const checked = done.includes(idx);
+                const el = document.createElement('div');
+                el.className = 'tl-item' + (checked ? ' done' : '');
+                el.innerHTML = `
+            <input type="checkbox" class="tl-cb" ${checked ? 'checked' : ''} onchange="toggleCheck(${idx})">
+            <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="tl-time">${item.hr}</span>
+                    <span class="badge badge-blue" style="font-size:.55rem;">${item.sector}</span>
+                </div>
+                <p class="tl-task">${item.task}</p>
+            </div>`;
+                container.appendChild(el);
+            });
+        }
+
+        function toggleCheck(idx) {
+            const key = 'sp_tl_day' + activeDayCounter + '_' + selectedMode;
+            let done = JSON.parse(localStorage.getItem(key)) || [];
+            if (done.includes(idx)) done = done.filter(i => i !== idx);
+            else done.push(idx);
+            localStorage.setItem(key, JSON.stringify(done));
+            buildChecklist();
+        }
+
+        // ============================================================
+        // SAVE DAILY SCORES (Tab 1)
+        // ============================================================
+        function saveDailyScores() {
+            const da = document.getElementById('da-score').value;
+            const ta = document.getElementById('ta-score').value;
+            if (!da || !ta) { toast('⚠️ Enter both scores before saving.'); return; }
+            const payload = { day: activeDayCounter, da, ta, ts: new Date().toISOString() };
+            localStorage.setItem('sp_score_day' + activeDayCounter, JSON.stringify(payload));
+            document.getElementById('da-score').value = '';
+            document.getElementById('ta-score').value = '';
+            toast('✅ Day ' + activeDayCounter + ' scores locked!');
+        }
+
+        // ============================================================
+        // ANALYTICS DOUGHNUT CHART
+        // ============================================================
+        function initCharts() {
+            // Analytics
+            const ctx1 = document.getElementById('analyticsDoughnut').getContext('2d');
+            analyticsChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Active Day', 'Remaining'],
+                    datasets: [{ data: [0, 1, 279], backgroundColor: ['#00e676', '#0091ff', '#e21b2c'], borderWidth: 0, hoverOffset: 6 }]
+                },
+                options: {
+                    cutout: '72%', responsive: true, animation: { animateRotate: true, duration: 800 },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' days' } } }
+                }
+            });
+
+            // TANCET
+            const ctx2 = document.getElementById('tancetDoughnut').getContext('2d');
+            tancetChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Avg Accuracy', 'Gap'],
+                    datasets: [{ data: [0, 10], backgroundColor: ['#0091ff', '#1a2040'], borderWidth: 0 }]
+                },
+                options: {
+                    cutout: '72%', responsive: true, animation: { duration: 600 },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Fitness
+            const ctx3 = document.getElementById('fitnessDoughnut').getContext('2d');
+            fitnessChart = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Compliance', 'Remaining'],
+                    datasets: [{ data: [0, 100], backgroundColor: ['#e21b2c', '#1a0810'], borderWidth: 0 }]
+                },
+                options: {
+                    cutout: '72%', responsive: true, animation: { duration: 600 },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateAnalyticsChart() {
+            const done = activeDayCounter - 1;
+            const active = 1;
+            const rem = 280 - activeDayCounter;
+            if (analyticsChart) {
+                analyticsChart.data.datasets[0].data = [done, active, rem < 0 ? 0 : rem];
+                analyticsChart.update();
+            }
+            document.getElementById('chart-done').textContent = done;
+            document.getElementById('chart-active').textContent = active;
+            document.getElementById('chart-rem').textContent = rem < 0 ? 0 : rem;
+        }
+
+        // ============================================================
+        // TANCET — Save Log, Render, Clear
+        // ============================================================
+        function saveTancetLog() {
+            const acc = document.getElementById('tancet-acc').value;
+            const time = document.getElementById('tancet-time').value;
+            const scr = document.getElementById('tancet-score-val').value;
+            if (!acc) { toast('⚠️ Enter accuracy score.'); return; }
+            const logs = JSON.parse(localStorage.getItem('sp_tancet_logs')) || [];
+            logs.unshift({ day: activeDayCounter, acc, time: time || '—', score: scr || '—', ts: new Date().toISOString() });
+            localStorage.setItem('sp_tancet_logs', JSON.stringify(logs));
+            document.getElementById('tancet-acc').value = '';
+            document.getElementById('tancet-time').value = '';
+            document.getElementById('tancet-score-val').value = '';
+            renderTancetLogs();
+            updateTancetChart();
+            toast('✅ Test log committed to vault!');
+        }
+
+        function renderTancetLogs() {
+            const container = document.getElementById('tancet-log-history');
+            const logs = JSON.parse(localStorage.getItem('sp_tancet_logs')) || [];
+            if (!logs.length) { container.innerHTML = '<p style="font-size:.68rem;color:var(--text-2);text-align:center;padding:12px;">No logs yet. Run your first mock test.</p>'; return; }
+            container.innerHTML = logs.slice(0, 15).map(l =>
+                `<div class="tancet-log-item">
+            <span class="badge badge-blue" style="font-size:.58rem;">Day ${l.day}</span>
+            <span style="color:#4db8ff;">Acc: ${l.acc}/10</span>
+            <span style="color:var(--text-2);">⏱ ${l.time}</span>
+            <span style="color:#00e676;">Score: ${l.score}</span>
+            <span style="color:var(--text-3);font-size:.6rem;">${new Date(l.ts).toLocaleDateString()}</span>
+         </div>`
+            ).join('');
+            updateTancetChart();
+        }
+
+        function clearTancetLogs() {
+            if (!confirm('Clear all test logs?')) return;
+            localStorage.removeItem('sp_tancet_logs');
+            renderTancetLogs();
+            toast('🗑️ Test log history cleared.');
+        }
+
+        function updateTancetChart() {
+            const logs = JSON.parse(localStorage.getItem('sp_tancet_logs')) || [];
+            if (!logs.length || !tancetChart) return;
+            const avg = logs.reduce((s, l) => s + parseFloat(l.acc || 0), 0) / logs.length;
+            const pct = Math.round(avg * 10);
+            tancetChart.data.datasets[0].data = [pct, 100 - pct];
+            tancetChart.update();
+            document.getElementById('tancet-avg-label').textContent = 'Avg Accuracy: ' + avg.toFixed(1) + '/10 (' + pct + '%)';
+        }
+
+        // ============================================================
+        // FORMULA VAULT
+        // ============================================================
+        function saveFormulaVault() {
+            const v = document.getElementById('tancet-formula-vault').value;
+            localStorage.setItem('sp_formula_vault', v);
+            toast('🧠 Formula vault saved permanently!');
+        }
+
+        function clearFormulaVault() {
+            if (!confirm('Clear formula vault?')) return;
+            localStorage.removeItem('sp_formula_vault');
+            document.getElementById('tancet-formula-vault').value = '';
+            toast('🗑️ Vault cleared.');
+        }
+
+        function loadFormulaVault() {
+            const v = localStorage.getItem('sp_formula_vault');
+            if (v) document.getElementById('tancet-formula-vault').value = v;
+        }
+
+        // Auto-save formula vault on type
+        document.addEventListener('DOMContentLoaded', () => {
+            const vault = document.getElementById('tancet-formula-vault');
+            if (vault) vault.addEventListener('input', () => localStorage.setItem('sp_formula_vault', vault.value));
+        });
+
+        // ============================================================
+        // MEALS RENDERER
+        // ============================================================
+        let fitnessProfile = { weight: 75, level: 'Beginner' };
+
+        function loadFitnessProfile() {
+            const saved = localStorage.getItem('sp_fitness_profile');
+            if (saved) {
+                fitnessProfile = JSON.parse(saved);
+            }
+            const wInput = document.getElementById('profile-weight');
+            const lInput = document.getElementById('profile-level');
+            if (wInput) wInput.value = fitnessProfile.weight;
+            if (lInput) lInput.value = fitnessProfile.level;
+        }
+
+        function saveFitnessProfile() {
+            const wInput = document.getElementById('profile-weight');
+            const lInput = document.getElementById('profile-level');
+            if (wInput && lInput) {
+                fitnessProfile.weight = parseFloat(wInput.value) || 75;
+                fitnessProfile.level = lInput.value;
+                localStorage.setItem('sp_fitness_profile', JSON.stringify(fitnessProfile));
+                masterRefresh();
+                toast('⚙️ Spider-Suit Calibration Saved');
+            }
+        }
+
+        function renderMeals() {
+            const day = (activeDayCounter - 1) % onePotMeals.length;
+            const meal = onePotMeals[day];
+            const container = document.getElementById('meal-injector');
+            container.innerHTML = '';
+
+            let multiplier = 1.2;
+            if (fitnessProfile.level === 'Intermediate') multiplier = 1.35;
+            if (fitnessProfile.level === 'Expert') multiplier = 1.5;
+            if (fitnessProfile.level === 'Pro') multiplier = 1.6;
+
+            const bmr = fitnessProfile.weight * 24;
+            const targetKcal = Math.round(bmr * multiplier);
+
+            const calTargetEl = document.getElementById('fit-cal-target');
+            if (calTargetEl) calTargetEl.textContent = targetKcal + ' Kcal';
+
+            // Split calories: 30% breakfast, 40% lunch, 30% dinner
+            const bkKcal = Math.round(targetKcal * 0.3);
+            const luKcal = Math.round(targetKcal * 0.4);
+            const dnKcal = Math.round(targetKcal * 0.3);
+
+            const meals = [
+                { label: '🌅 Breakfast', data: meal.breakfast, color: '#4db8ff', kcal: bkKcal },
+                { label: '☀️ Lunch', data: meal.lunch, color: '#00e676', kcal: luKcal },
+                { label: '🌙 Dinner', data: meal.dinner, color: '#ff3347', kcal: dnKcal }
+            ];
+
+            meals.forEach(m => {
+                const el = document.createElement('div');
+                el.className = 'meal-card';
+                el.innerHTML = `
+            <div class="micro-label" style="color:${m.color};margin-bottom:6px;">${m.label}</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">${m.data.name}</div>
+            <div class="badge badge-yellow" style="font-size:.6rem;margin-bottom:8px;">${m.kcal} kcal</div>
+            <p style="font-size:.68rem;color:var(--text-2);line-height:1.6;">${m.data.desc}</p>`;
+                container.appendChild(el);
+            });
+        }
+
+        // ============================================================
+        // WORKOUT RENDERER
+        // ============================================================
+        function renderWorkout() {
+            const day = (activeDayCounter - 1) % workoutMatrix.length;
+            const w = workoutMatrix[day];
+            document.getElementById('workout-badge').textContent = w.muscles + ' - ' + fitnessProfile.level;
+            const container = document.getElementById('workout-injector');
+            container.innerHTML = '';
+
+            let setModifier = 0;
+            if (fitnessProfile.level === 'Beginner') setModifier = -1;
+            if (fitnessProfile.level === 'Expert') setModifier = +1;
+            if (fitnessProfile.level === 'Pro') setModifier = +2;
+
+            w.exercises.forEach((ex, idx) => {
+                const el = document.createElement('div');
+                el.className = 'ex-item';
+
+                // Adjust sets
+                let setsStr = ex.sets;
+                let parsedSets = parseInt(setsStr.charAt(0));
+                if (!isNaN(parsedSets)) {
+                    let newSets = Math.max(1, parsedSets + setModifier);
+                    setsStr = newSets + setsStr.substring(1);
+                }
+
+                // Add a finisher for Pro
+                if (fitnessProfile.level === 'Pro' && idx === w.exercises.length - 1) {
+                    setsStr += " + DROPSET";
+                }
+
+                el.innerHTML = `
+            <div>
+                <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;color:var(--text-1);">${ex.name}</div>
+                <div style="font-size:.65rem;color:var(--text-2);margin-top:2px;">📝 ${ex.note}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+                <div class="badge badge-red" style="font-size:.62rem;">${setsStr}</div>
+                <div style="font-size:.6rem;color:#ffd600;margin-top:3px;">~${ex.kcalBurn} kcal</div>
+            </div>`;
+                container.appendChild(el);
+            });
+        }
+
+        // ============================================================
+        // FITNESS METRICS
+        // ============================================================
+        function saveFitnessMetrics() {
+            const steps = document.getElementById('fit-steps').value;
+            const weight = document.getElementById('fit-weight').value;
+            const meals = document.getElementById('fit-meals').value;
+            const workout = document.getElementById('fit-workout-done').value;
+
+            if (!steps && !weight) { toast('⚠️ Enter at least steps or body weight.'); return; }
+
+            const payload = { day: activeDayCounter, steps, weight, meals, workout, ts: new Date().toISOString() };
+            const logs = JSON.parse(localStorage.getItem('sp_fitness_logs')) || [];
+            logs.unshift(payload);
+            localStorage.setItem('sp_fitness_logs', JSON.stringify(logs));
+
+            // Update compliance chart
+            const mealScore = parseInt(meals || 0) / 3 * 100;
+            const workoutScore = workout === 'yes' ? 100 : workout === 'partial' ? 50 : 0;
+            const stepScore = Math.min(parseInt(steps || 0) / 10000 * 100, 100);
+            const compliance = Math.round((mealScore + workoutScore + stepScore) / 3);
+
+            if (fitnessChart) {
+                fitnessChart.data.datasets[0].data = [compliance, 100 - compliance];
+                fitnessChart.update();
+            }
+            document.getElementById('fit-compliance-label').textContent = 'Day Compliance: ' + compliance + '%';
+
+            document.getElementById('fit-steps').value = '';
+            document.getElementById('fit-weight').value = '';
+            document.getElementById('fit-meals').value = '';
+
+            renderFitnessWeightLog();
+            toast('✅ Fitness metrics locked for Day ' + activeDayCounter + '!');
+        }
+
+        function renderFitnessWeightLog() {
+            const logs = JSON.parse(localStorage.getItem('sp_fitness_logs')) || [];
+            const container = document.getElementById('fit-weight-log');
+            if (!logs.length) { container.innerHTML = ''; return; }
+            container.innerHTML = logs.slice(0, 8).map(l =>
+                `<div style="display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="color:var(--text-2);">Day ${l.day}</span>
+            ${l.weight ? `<span style="color:#00e676;">${l.weight} kg</span>` : ''}
+            ${l.steps ? `<span style="color:#ffd600;">${parseInt(l.steps).toLocaleString()} steps</span>` : ''}
+         </div>`
+            ).join('');
+        }
+
+        // ============================================================
+        // NOTES — Pin, Render, Delete, Clear
+        // ============================================================
+        function pinNewNote() {
+            const heading = document.getElementById('note-heading').value.trim();
+            const body = document.getElementById('note-body').value.trim();
+            if (!heading && !body) { toast('⚠️ Write something before pinning.'); return; }
+            const tag = document.querySelector('input[name="note-tag"]:checked').value;
+            const notes = JSON.parse(localStorage.getItem('sp_notes')) || [];
+            notes.unshift({ id: Date.now(), heading, body, tag, ts: new Date().toISOString() });
+            localStorage.setItem('sp_notes', JSON.stringify(notes));
+            document.getElementById('note-heading').value = '';
+            document.getElementById('note-body').value = '';
+            renderNotes();
+            toast('📌 Note pinned to canvas!');
+        }
+
+        function deleteNote(id) {
+            let notes = JSON.parse(localStorage.getItem('sp_notes')) || [];
+            notes = notes.filter(n => n.id !== id);
+            localStorage.setItem('sp_notes', JSON.stringify(notes));
+            renderNotes();
+            toast('🔥 Note burned and removed.');
+        }
+
+        function clearAllNotes() {
+            if (!confirm('Clear all pinned notes from the canvas?')) return;
+            localStorage.removeItem('sp_notes');
+            renderNotes();
+            toast('🗑️ All notes cleared.');
+        }
+
+        function renderNotes() {
+            const notes = JSON.parse(localStorage.getItem('sp_notes')) || [];
+            const grid = document.getElementById('notes-grid');
+            const count = document.getElementById('note-count-badge');
+            count.textContent = notes.length + ' Pin' + (notes.length !== 1 ? 's' : '');
+
+            const tagMap = {
+                da: { label: '🖥️ Data Analytics', cls: 'badge-blue', noteCls: 'sticky-note-da' },
+                tancet: { label: '📐 TANCET Rule', cls: 'badge-red', noteCls: 'sticky-note-tancet' },
+                general: { label: '💡 Strategy Idea', cls: 'badge-purple', noteCls: 'sticky-note-general' },
+                fitness: { label: '💪 Fitness Note', cls: 'badge-green', noteCls: 'sticky-note-general' }
+            };
+
+            if (!notes.length) {
+                grid.innerHTML = `<div class="md:col-span-3" style="text-align:center;padding:40px 0;color:var(--text-2);font-size:.78rem;">
+            No pins yet. Type a thought and hit "Pin to Canvas" above. 🕷️
+        </div>`;
+                return;
+            }
+
+            grid.innerHTML = notes.map(n => {
+                const t = tagMap[n.tag] || tagMap.general;
+                const date = new Date(n.ts);
+                const dateStr = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                return `<div class="sticky-note ${t.noteCls}">
+            <button class="burn-btn" onclick="deleteNote(${n.id})">🔥 Burn</button>
+            <div class="badge ${t.cls}" style="font-size:.58rem;margin-bottom:10px;">${t.label}</div>
+            ${n.heading ? `<h4 style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.92rem;color:var(--text-1);margin-bottom:6px;padding-right:44px;line-height:1.3;">${n.heading}</h4>` : ''}
+            ${n.body ? `<p style="font-size:.72rem;color:var(--text-2);line-height:1.7;white-space:pre-wrap;">${n.body}</p>` : ''}
+            <div style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text-3);">${dateStr}</div>
+        </div>`;
+            }).join('');
+        }
+
+        // ============================================================
+        // TAB SWITCHING
+        // ============================================================
+        const tabMap = {
+            'da-core': 'page-da-core',
+            'tancet-prep': 'page-tancet-prep',
+            'body-trans': 'page-body-trans',
+            'creative-notes': 'page-creative-notes'
+        };
+
+        function switchTab(id) {
+            // Hide all
+            Object.values(tabMap).forEach(pid => {
+                const el = document.getElementById(pid);
+                if (el) { el.classList.remove('active'); el.style.display = 'none'; }
+            });
+            // Deactivate all tab buttons
+            Object.keys(tabMap).forEach(tid => {
+                const btn = document.getElementById('tab-' + tid);
+                if (btn) btn.classList.remove('tab-active');
+            });
+            // Show target
+            const target = document.getElementById(tabMap[id]);
+            if (target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
+            const btn = document.getElementById('tab-' + id);
+            if (btn) btn.classList.add('tab-active');
+
+            // Re-render charts on tab show to fix canvas sizing
+            if (id === 'da-core') setTimeout(() => analyticsChart && analyticsChart.resize(), 50);
+            if (id === 'tancet-prep') setTimeout(() => tancetChart && tancetChart.resize(), 50);
+            if (id === 'body-trans') setTimeout(() => fitnessChart && fitnessChart.resize(), 50);
+        }
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        let toastTimer = null;
+        function toast(msg) {
+            const el = document.getElementById('sp-toast');
+            document.getElementById('toast-msg').textContent = msg;
+            el.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // CANVAS — ANIMATED SPIDER WEB + MICRO-PARTICLES
+        // ============================================================
+        function initWebCanvas() {
+            const canvas = document.getElementById('web-canvas');
+            const ctx = canvas.getContext('2d');
+            let W, H;
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            // --- Node Network (web filaments) ---
+            const NODES = 32;
+            let nodes = [];
+
+            function spawnNodes() {
+                nodes = Array.from({ length: NODES }, () => ({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2
+                }));
+            }
+            spawnNodes();
+            window.addEventListener('resize', spawnNodes);
+
+            // --- Particles ---
+            const PARTICLES = 18;
+            let particles = [];
+
+            function spawnParticles() {
+                particles = Array.from({ length: PARTICLES }, () => ({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    r: Math.random() * 1.8 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    alpha: Math.random() * 0.4 + 0.1,
+                    hue: Math.random() > 0.5 ? 'rgba(226,27,44,' : 'rgba(0,145,255,'
+                }));
+            }
+            spawnParticles();
+
+            // --- Ripples (Spider-Sense) ---
+            const ripples = [];
+            window.addEventListener('mousedown', (e) => {
+                ripples.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    r: 0,
+                    alpha: 1,
+                    maxR: 120 + Math.random() * 80
+                });
+            });
+
+            // --- Radial Web ---
+            function drawRadialWeb(cx, cy, rings, spokes, maxR, alpha) {
+                const step = (Math.PI * 2) / spokes;
+                for (let s = 0; s < spokes; s++) {
+                    const a = s * step;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(cx + Math.cos(a) * maxR, cy + Math.sin(a) * maxR);
+                    ctx.strokeStyle = `rgba(0,145,255,${alpha * 0.5})`;
+                    ctx.lineWidth = 0.35;
+                    ctx.stroke();
+                }
+                for (let r = 1; r <= rings; r++) {
+                    const rad = (maxR / rings) * r;
+                    ctx.beginPath();
+                    for (let s = 0; s <= spokes; s++) {
+                        const a = s * step;
+                        const x = cx + Math.cos(a) * rad;
+                        const y = cy + Math.sin(a) * rad;
+                        s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.strokeStyle = `rgba(226,27,44,${alpha * (1 - r / rings) * 0.55})`;
+                    ctx.lineWidth = 0.3;
+                    ctx.stroke();
+                }
+            }
+
+            // --- Main Loop ---
+            function animate() {
+                ctx.clearRect(0, 0, W, H);
+
+                // Radial webs at corners
+                const rad = Math.min(W, H) * 0.18;
+                drawRadialWeb(0, 0, 5, 8, rad, 0.06);
+                drawRadialWeb(W, 0, 5, 8, rad, 0.06);
+                drawRadialWeb(0, H, 5, 8, rad, 0.045);
+                drawRadialWeb(W, H, 5, 8, rad, 0.045);
+                drawRadialWeb(W / 2, H / 2, 6, 12, Math.min(W, H) * 0.25, 0.025);
+
+                // Update + draw web nodes
+                nodes.forEach(n => {
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > W) n.vx *= -1;
+                    if (n.y < 0 || n.y > H) n.vy *= -1;
+                });
+                const maxDist = Math.min(W, H) * 0.3;
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const dx = nodes[i].x - nodes[j].x;
+                        const dy = nodes[i].y - nodes[j].y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < maxDist) {
+                            const a = (1 - d / maxDist) * 0.09;
+                            ctx.beginPath();
+                            ctx.moveTo(nodes[i].x, nodes[i].y);
+                            ctx.lineTo(nodes[j].x, nodes[j].y);
+                            ctx.strokeStyle = (i + j) % 3 === 0
+                                ? `rgba(226,27,44,${a * 0.7})`
+                                : `rgba(0,145,255,${a})`;
+                            ctx.lineWidth = 0.55;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                nodes.forEach(n => {
+                    ctx.beginPath(); ctx.arc(n.x, n.y, 1.1, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0,145,255,0.15)'; ctx.fill();
+                });
+
+                // Particles
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > W) p.vx *= -1;
+                    if (p.y < 0 || p.y > H) p.vy *= -1;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.hue + p.alpha + ')'; ctx.fill();
+                });
+
+                // Ripples
+                for (let i = ripples.length - 1; i >= 0; i--) {
+                    let rp = ripples[i];
+                    rp.r += 3.5;
+                    rp.alpha -= 0.015;
+                    if (rp.alpha <= 0) {
+                        ripples.splice(i, 1);
+                        continue;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(226, 27, 44, ${rp.alpha * 0.8})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(rp.x, rp.y, rp.r * 0.7, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(0, 145, 255, ${rp.alpha * 0.5})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+
+</html>
